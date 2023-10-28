@@ -126,7 +126,7 @@ public final class DataFileReader extends AbstractDataFileReader {
 
 
             // Add entries to lists if all elements are non-null
-            if (!country.isEmpty() && !month.isBlank() && !balance.isEmpty() && !product.isEmpty() && !gwhString.isEmpty()) {
+            if (!country.isBlank() && !month.isBlank() && !balance.isBlank() && !product.isBlank() && !gwhString.isBlank()) {
                 this.countryList.add(country);
                 this.monthList.add(month);
                 this.balanceList.add(balance);
@@ -135,6 +135,7 @@ public final class DataFileReader extends AbstractDataFileReader {
                 this.gwhList.add(gwh);
                 ElectricityRecord record = new ElectricityRecord(country, month, balance, product, gwh);
                 this.recordList.add(record);
+                record.print();
             }
 
             // Go to next line

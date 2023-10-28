@@ -35,4 +35,8 @@ public class ElectricityRecord {
     public double getGwh() {
         return gwh;
     }
+
+    public void print() {
+        System.out.println("Record: "+ this.country + ", " + this.monthAndYear + ", " + this.balance + ", " + this.product + ", " + this.gwh);
+    }
 }
