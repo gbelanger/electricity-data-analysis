@@ -155,8 +155,7 @@ public final class DataFileReader extends AbstractDataFileReader {
                 System.out.println("... " + lineNumber);
             }
         }
-        System.out.println("... " + lineNumber);
-        System.out.println("Done!");
+        System.out.println("... " + lineNumber + ". Done");
 
         countryList.trimToSize();
         monthList.trimToSize();
@@ -167,6 +166,7 @@ public final class DataFileReader extends AbstractDataFileReader {
         recordList.trimToSize();
         
         // Create unique sets from lists
+        logger.info("Creating unique sets from lists");
         countrySet = new HashSet<>(countryList);
         monthSet = new HashSet<>(monthList);
         balanceSet = new HashSet<>(balanceList);
