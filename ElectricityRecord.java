@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class ElectricityRecord {
+public class ElectricityRecord implements Comparable<ElectricityRecord> {
 
     private String country;
     private String monthAndYear;
@@ -14,6 +14,11 @@ public class ElectricityRecord {
         this.balance = balance;
         this.product = product;
         this.gwh = gwh;
+    }
+
+    @Override
+    public int compareTo(ElectricityRecord record) {
+        return (int) Math.signum(this.gwh - record.getGwh());
     }
 
     public String getCountry() {
@@ -37,6 +42,6 @@ public class ElectricityRecord {
     }
 
     public void print() {
-        System.out.println("Record: "+ this.country + ", " + this.monthAndYear + ", " + this.balance + ", " + this.product + ", " + this.gwh);
+        System.out.println(this.getClass().getSimpleName() + " - " + this.country + ", " + this.monthAndYear + ", " + this.balance + ", " + this.product + ", " + this.gwh);
     }
 }

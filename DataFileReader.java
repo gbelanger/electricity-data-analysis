@@ -2,6 +2,7 @@
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
 
+import java.util.HashSet;
 import java.util.logging.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +20,12 @@ public final class DataFileReader extends AbstractDataFileReader {
     private ArrayList<String> productList;
     private ArrayList<String> gigaWattHourList;
     private ArrayList<Double> gwhList;
+
+    private HashSet<String> countrySet;
+    private HashSet<String> monthSet;
+    private HashSet<String> balanceSet;
+    private HashSet<String> productSet;
+
 
     private ArrayList<ElectricityRecord> recordList;
 
@@ -54,20 +61,22 @@ public final class DataFileReader extends AbstractDataFileReader {
     protected void processFile(boolean debug) throws IllegalArgumentException, NoSuchElementException {
 
         // Initialise class lists
-        this.countryList = new ArrayList<>();
-        this.monthList = new ArrayList<>();
-        this.balanceList = new ArrayList<>();
-        this.productList = new ArrayList<>();
-        this.gigaWattHourList = new ArrayList<>();
-        this.gwhList = new ArrayList<>();
-        this.recordList = new ArrayList<>();
+        countryList = new ArrayList<>();
+        monthList = new ArrayList<>();
+        balanceList = new ArrayList<>();
+        productList = new ArrayList<>();
+        gigaWattHourList = new ArrayList<>();
+        gwhList = new ArrayList<>();
+        recordList = new ArrayList<>();
 
         // Skip the column titles
         int lineNumber = 2;
 
-        for (int lineIdx = 1; lineIdx < this.lines.size(); lineIdx++) {
+        System.out.println("Reading records. (This can take a while)");
 
-            String[] dataline = this.lines.get(lineIdx);
+        for (int lineIdx = 1; lineIdx < lines.size(); lineIdx++) {
+
+            String[] dataline = lines.get(lineIdx);
             if (debug) logger.info("Reading line number " + lineNumber);
 
             int l = 0;
@@ -111,7 +120,7 @@ public final class DataFileReader extends AbstractDataFileReader {
             String gwhString = dataline[l++].toLowerCase().trim();
             double gwh = 0;
             if (gwhString.isBlank() || gwhString.isEmpty()) {
-                logger.warning("Missing gwh on line " + lineNumber + ". Product: "+product);
+//                logger.warning("Missing gwh on line " + lineNumber + ". Product: "+product);
             }
             else {
                 try {
@@ -127,34 +136,47 @@ public final class DataFileReader extends AbstractDataFileReader {
 
             // Add entries to lists if all elements are non-null
             if (!country.isBlank() && !month.isBlank() && !balance.isBlank() && !product.isBlank() && !gwhString.isBlank()) {
-                this.countryList.add(country);
-                this.monthList.add(month);
-                this.balanceList.add(balance);
-                this.productList.add(product);
-                this.gigaWattHourList.add(gwhString);
-                this.gwhList.add(gwh);
+                countryList.add(country);
+                monthList.add(month);
+                balanceList.add(balance);
+                productList.add(product);
+                gigaWattHourList.add(gwhString);
+                gwhList.add(gwh);
                 ElectricityRecord record = new ElectricityRecord(country, month, balance, product, gwh);
-                this.recordList.add(record);
-                record.print();
+                recordList.add(record);
+//                record.print();
             }
 
             // Go to next line
             lineNumber++;
             if (debug) System.out.println();
-        }
 
-        this.countryList.trimToSize();
-        this.monthList.trimToSize();
-        this.balanceList.trimToSize();
-        this.productList.trimToSize();
-        this.gigaWattHourList.trimToSize();
-        this.gwhList.trimToSize();
-        this.recordList.trimToSize();
+            if (lineNumber % 10000 == 0) {
+                System.out.println("... " + lineNumber);
+            }
+        }
+        System.out.println("... " + lineNumber);
+        System.out.println("Done!");
+
+        countryList.trimToSize();
+        monthList.trimToSize();
+        balanceList.trimToSize();
+        productList.trimToSize();
+        gigaWattHourList.trimToSize();
+        gwhList.trimToSize();
+        recordList.trimToSize();
+        
+        // Create unique sets from lists
+        countrySet = new HashSet<>(countryList);
+        monthSet = new HashSet<>(monthList);
+        balanceSet = new HashSet<>(balanceList);
+        productSet = new HashSet<>(productList);
+
     }
 
     @Override
     public ArrayList<ElectricityRecord> getList() {
-        return this.recordList;
+        return recordList;
     }
 
     @Override
@@ -163,26 +185,40 @@ public final class DataFileReader extends AbstractDataFileReader {
         return recordList.toArray(records);
     }
 
+    public HashSet<String> getCountrySet() {
+        return countrySet;
+    }
 
+    public HashSet<String> getMonthSet() {
+        return monthSet;
+    }
 
-//    @Override
+    public HashSet<String> getBalanceSet() {
+        return balanceSet;
+    }
+
+    public HashSet<String> getProductSet() {
+        return productSet;
+    }
+
+    //    @Override
 //    public IMarker get(String key) throws NoSuchElementException {
-//        int idx = this.keyList.indexOf(key);
+//        int idx = keyList.indexOf(key);
 //        if (idx == -1) {
 //            throw new NoSuchElementException("Marker key '" + key + "' not found in " + DATA_FILENAME);
 //        }
-//        return this.markersList.get(idx);
+//        return markersList.get(idx);
 //    }
 //
 //    public IMarker getByName(String name) throws NoSuchElementException {
-//        int idx = this.namesList.indexOf(name);
+//        int idx = namesList.indexOf(name);
 //        if (idx == -1) {
-//            idx = this.shortNamesList.indexOf(name);
+//            idx = shortNamesList.indexOf(name);
 //            if (idx == -1) {
 //                throw new NoSuchElementException("Marker name '" + name + "' not found in " + DATA_FILENAME);
 //            }
 //        }
-//        return this.markersList.get(idx);
+//        return markersList.get(idx);
 //    }
 
 }
