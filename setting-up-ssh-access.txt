@@ -1,0 +1,39 @@
+# This is what was done to setup access to github
+
+# Generate an ssh key
+
+ssh-keygen -t ed25519 -C "laurentbelanger@icloud.com"
+
+# Create and setup the ssh config file
+
+touch ~/.ssh/config
+open -t ~/.ssh/config
+
+# Paste this into the config file
+
+Host github.com
+  User git
+  Hostname github.com
+  AddKeysToAgent yes
+  IdentityFile ~/.ssh/id_ed25519
+  IgnoreUnknown UseKeychain
+  PreferredAuthentications publickey
+
+
+# Define your email identity for signing commits to git
+
+git config --global user.email laurentbelanger@icloud.com
+
+# Define ssh protocol to access github repository
+
+git remote set-url origin git@github.com:gbelanger/electricity-data-analysis.git
+
+# Copy the public key to the clipboard and add it to github
+
+pbcopy < ~/.ssh/id_ed25519.pub
+
+# Login to github, 
+# go to Settings,
+# SSH and GPG keys : https://github.com/settings/keys
+# New SSH key, paste, save
+
