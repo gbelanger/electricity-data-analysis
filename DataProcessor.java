@@ -50,6 +50,19 @@ public final class DataProcessor {
         return selected;
     }
 
+    public ArrayList<ElectricityRecord> selectByBalance(String balance) {
+        System.out.print("Selecting by balance '" + balance + "' ... ");
+        ArrayList<ElectricityRecord> selected = new ArrayList<>();
+        for (ElectricityRecord record : this.records) {
+            if (record.getBalance().equals(balance)) {
+                selected.add(record);
+            }
+        }
+        selected.trimToSize();
+        System.out.println("done");
+        return selected;
+    }
+
     public ArrayList<ElectricityRecord> selectByCountryAndProduct(String country, String product)  {
         System.out.print("Selecting by country and product '" + country + "' and '" + product + "' ... ");
         ArrayList<ElectricityRecord> selectedByCountry = this.selectByCountry(country);
@@ -57,6 +70,27 @@ public final class DataProcessor {
         System.out.print("And now selecting for '" + product + "' ... ");
         for (ElectricityRecord record : selectedByCountry) {
             if (record.getProduct().equals(product)) {
+                selected.add(record);
+            }
+        }
+        System.out.println("done");
+        return selected;
+    }
+
+    public ArrayList<ElectricityRecord> selectByCountryProductAndBalance(String country, String product, String balance)  {
+        System.out.print("Selecting by country and product '" + country + "' and '" + product + "' ... ");
+        ArrayList<ElectricityRecord> selectedByCountry = this.selectByCountry(country);
+        ArrayList<ElectricityRecord> selectedByCountryAndProduct = new ArrayList<>();
+        System.out.print("Now selecting for product '" + product + "' ... ");
+        for (ElectricityRecord record : selectedByCountry) {
+            if (record.getProduct().equals(product)) {
+                selectedByCountryAndProduct.add(record);
+            }
+        }
+        ArrayList<ElectricityRecord> selected = new ArrayList<>();
+        System.out.print("And now selecting for balance '" + balance + "' ... ");
+        for (ElectricityRecord record : selectedByCountryAndProduct) {
+            if (record.getBalance().equals(balance)) {
                 selected.add(record);
             }
         }
