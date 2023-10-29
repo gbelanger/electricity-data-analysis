@@ -1,0 +1,20 @@
+.DS_Store
+bloodwork_report
+bin/
+src/main/java/*.class
+src/main/latex/*.aux
+src/main/latex/*.log
+src/main/latex/*.synctex*
+src/main/latex/*.fls
+src/main/latex/*.fdb*
+*.numbers
+*.jar
+.idea
+.idea/*
+.idea/workspace.xml
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
